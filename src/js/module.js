@@ -18,3 +18,9 @@
  */
 
 var hlmem = hlmem || {};
+
+(function(m) {
+    m.version = function() {
+        return [0, 0, 1];
+    };
+})(hlmem);

@@ -15,23 +15,24 @@ Features
 --------
 Hyperluminal-mem-js is designed and optimized for the following objectives:
 - speed: serializing and deserializing data uses Javascript typed arrays
+  for maximum speed.
 - safety: it can be used on untrusted and possibly malicious data,
   as for example serialized packets or files received from the internet.
 - portability: the serialization format is portable.
   This Javascript implementation always uses 32-bit data format
   with native endianity.
   The Common Lisp equivalent also supports 64-bit format
-  and defaults to little-endian endianity.
-  Conversion between little and big endian formats is trivial.
+  and both little-endian (the default) and big-endian format.
+  Conversion between little- and big-endian formats is trivial.
 - ease of use: adding support for user-defined types is usually
-  straightforward (This is currently unimplemented)
+  straightforward (this is currently unimplemented).
 
 ### News, 21st March 2015
 
 Initial implementation. Supports the following Javascript types:
 * integers up to 30 bits
 * arrays
-* the constants true, false, null and undefined
+* the constants `true`, `false`, `null` and `undefined`
 
 Support the following types is not yet implemented:
 * integers larger than 30 bits
@@ -121,7 +122,7 @@ global `hlmem` object:
    see `mread-object` and `mwrite-object` for details.
 
 - `msize_object(object, index)` is a function that examines an object
-   and tells how many words of raw memory are needed to serialize it.
+   and tells how many words of memory are needed to serialize it.
 
    Not yet implemented...
 
@@ -131,12 +132,12 @@ global `hlmem` object:
    Not yet implemented...
 
 - `mwrite_object(object, ptr, index, end_index)` is a function
-   that serializes an object, writing it into raw memory.
+   that serializes an object, writing it into memory.
 
    Not yet implemented...
 
 - `version()` is a function that returns the current version of
-  Hyperluminal-mem-js. The returned value is an array having the form
+  hyperluminal-mem-js. The returned value is an array having the form
   `[major, minor, patch]` as for example `[0, 5, 2]`
 
 
