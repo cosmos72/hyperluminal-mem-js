@@ -18,7 +18,7 @@ Hyperluminal-mem-js is designed and optimized for the following objectives:
   for maximum speed.
 - safety: it can be used on untrusted and possibly malicious data,
   as for example serialized packets or files received from the internet.
-- portability: the serialization format is portable.
+- portability: the serialization format is very portable.
   This Javascript implementation always uses 32-bit data format
   with native endianity.
   The Common Lisp equivalent also supports 64-bit format
@@ -147,6 +147,8 @@ Serialization format and ABI
 Hyperluminal-mem-js uses 32-bit serialization format with native endianity.
 It is currently not possible to override such settings.
 
+
+Status
 ------
 As of March 2015, Hyperluminal-mem-js is being written by Massimiliano Ghilardi
 and it is considered by the author to be in ALPHA status.
