@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Hyperluminal-mem-js testing</title>
+
+        <script src="js/module.js"></script>
+        <script src="js/word.js"></script>
+        <script src="js/unboxed.js"></script>
+        <script src="js/boxed.js"></script>
+        <script src="js/box/vector.js"></script>
+        <script src="js/main.js"></script>
+        <script src="js/debug.js"></script>
+        <script>
+            /* global hlmem */
+            
+            var text_in, text_out;
+            
+            function body_onload() {
+                text_in = document.getElementById('hlmem-object-data');
+                text_out = document.getElementById('hlmem-serialized-data');
+            };
+            
+            function do_eval() {
+                text_out.value = "";
+                hlmem.inspect(text_out, eval(text_in.value));
+            };
+            
+            function do_mwrite() {
+                var obj = eval(text_in.value);
+                var n_words = hlmem.msize(0, obj);
+                var ptr = hlmem.malloc_words(n_words);
+                hlmem.mwrite(ptr, 0, n_words, obj);
+                text_out.value = "";
+                hlmem.mdump(text_out, ptr, 0, n_words);
+            };
+
+            function do_mread() {
+                var words = text_out.value.trim().split(" ");
+                var n_words = 0, max_words = words.length;
+                ptr = hlmem.malloc_words(max_words);
+                for (i = 0; i < max_words; i++) {
+                    var word = words[i].trim();
+                    if (word.length > 0)
+                        ptr[n_words++] = parseInt(word, 16);
+                }
+                var value = hlmem.mread_v(ptr, [0], n_words);
+                text_in.value = "";
+                hlmem.print(text_in, value);
+            };
+            
+        </script>
+        <meta charset="UTF-8">
+    </head>
+    <body onload="body_onload()">
+        <div>Hyperluminal-mem-js</div>
+        <textarea id="hlmem-object-data" cols="72" rows="10"></textarea>
+        <br/>
+        <input type="button" value="eval   vvv" onclick="do_eval()"/>
+        <input type="button" value="mwrite vvv" onclick="do_mwrite()"/>
+        <input type="button" value="mread  ^^^" onclick="do_mread()"/>
+        <br/>
+        <textarea id="hlmem-serialized-data" cols="72" rows="10"></textarea>
+    </body>
+</html>
