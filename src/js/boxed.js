@@ -21,14 +21,16 @@
 
 (function(m) {
     var MEM_BOX_MIN_WORDS = 4;
-    var MEM_BOX_HEADER_WORDS = 1; // boxed values have a 1-word header
+    m.MEM_BOX_HEADER_WORDS = 1; // boxed values have a 1-word header
  
     m.MEM_BOX_BIGNUM        = 6;  // box is a bignum. intentionally = MEM_TAG_BOX
  
     m.MEM_BOX_VECTOR        = 17; // box is a 1-dimensional array, i.e. a vector")
     m.MEM_BOX_STRING_UTF_21 = 18;
     m.MEM_BOX_STRING_UTF_8  = 19;
-    m.MEM_BOX_STRING        = m.MEM_BOX_STRING_UTF_8; // default string format is UTF-8
+    m.MEM_BOX_ASCII_STRING  = 20; // box is an ASCII string
+    // m.MEM_BOX_STRING        = m.MEM_BOX_STRING_UTF_8; // default string format is UTF-8
+    m.MEM_BOX_STRING        = m.MEM_BOX_ASCII_STRING; // default string format is ASCII
 
     m.MEM_BOX_SYMBOL        = 22; // object is a symbol or keyword
  
@@ -43,7 +45,18 @@
         throw "the object at " + ptr + " + " + index + " declares to have type " + boxed_type + ",\n" +
             "which is not in the valid range " + m.MEM_BOX_FIRST + ".." + m.MEM_BOX_LAST + " for boxed types";
      };
-        
+
+    m.mwrite_internal_error = function(ptr, index, end_index, written_index) {
+        var actual_words = written_index - index;
+        var available_words = end_index - index;
+        throw "Hyperluminal-mem error!\n" +
+                "wrote " + actual_words + (actual_words === 1 ? " word" : " words") +
+                " at " + ptr + " + " + index + "\n" +
+                "but only " + available_words + (available_words === 1 ? " word was" : " words were") +
+                " available at that location.\n" +
+                "This is either a bug in hyperluminal-mem or in application code.";
+    };
+
     function check_box_type(ptr, index, boxed_type) {
         boxed_type = boxed_type | 0;
         if (boxed_type < m.MEM_BOX_FIRST || boxed_type > m.MEM_BOX_LAST)
@@ -68,21 +81,16 @@
     // Rounds up the returned value to a multiple of +MEM-BOX/MIN-WORDS+"
 
     m.msize_box = function(index, value, boxed_type) {
-        return m.MSIZE_BOX_FUNCTIONS[boxed_type - m.MEM_BOX_FIRST](index + MEM_BOX_HEADER_WORDS, value);
+        return m.MSIZE_BOX_FUNCTIONS[boxed_type - m.MEM_BOX_FIRST](index + m.MEM_BOX_HEADER_WORDS, value);
     };
 
     // Write a boxed value into the memory starting at (PTR+INDEX).
     // Also writes BOX header. Returns INDEX pointing to immediately after written value.
     m.mwrite_box = function(ptr, index, end_index, value, boxed_type) {
-        var new_index = m.MWRITE_BOX_FUNCTIONS[boxed_type - m.MEM_BOX_FIRST](ptr, index + MEM_BOX_HEADER_WORDS, end_index, value);
+        var new_index = m.MWRITE_BOX_FUNCTIONS[boxed_type - m.MEM_BOX_FIRST](ptr, index + m.MEM_BOX_HEADER_WORDS, end_index, value);
         var actual_words = new_index - index;
         if (new_index > end_index) {
-            var available_words = end_index - index;
-            throw "Hyperluminal-mem error!\nwrote " + actual_words + (actual_words === 1 ? " word" : " words") +
-                    " at " + ptr + " + " + index + "\n" +
-                    "but only " + available_words + (available_words === 1 ? " word was" : " words were") +
-                    " available at that location.\n" +
-                    "This is either a bug in hyperluminal-mem or in application code.";
+            mwrite_internal_error(ptr, index, end_index, new_index);
         }
         var n_words = round_up_size(actual_words);
         ptr[index] = (boxed_type << 27) | (n_words >>> 2); // divide n_words by MEM_BOX_MIN_WORDS
@@ -93,7 +101,7 @@
     // Return the value, and set index_v[0] to one after the last read word
     m.mread_box2_v = function(ptr, index_v, end_index, boxed_type) {
         check_box_type(ptr, index_v[0], boxed_type);
-        index_v[0] += MEM_BOX_HEADER_WORDS;
+        index_v[0] += m.MEM_BOX_HEADER_WORDS;
         return m.MREAD_BOX_FUNCTIONS[boxed_type - m.MEM_BOX_FIRST](ptr, index_v, end_index);
     };
 })(hlmem);

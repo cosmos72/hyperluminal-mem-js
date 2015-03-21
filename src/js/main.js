@@ -26,6 +26,8 @@
         var boxed_type = optional_boxed_type || m.mdetect_box_type(value);
         if (boxed_type !== undefined)
             return m.msize_box(index, value, boxed_type);
+        else
+            return m.msize_obj(index, value);
     };
 
     m.mwrite = function(ptr, index, end_index, value, optional_boxed_type) {
@@ -35,6 +37,8 @@
         var boxed_type = optional_boxed_type || m.mdetect_box_type(value);
         if (boxed_type !== undefined)
             return m.mwrite_box(ptr, index, end_index, value, boxed_type);
+        else
+            return m.mwrite_obj(ptr, index, end_index, value);
     };
 
     m.mread_v = function(ptr, index_v, end_index) {
@@ -54,6 +58,8 @@
         var boxed_type = value[0];
         if (boxed_type < m.MEM_BOX_LAST)
             return m.mread_box2_v(ptr, index_v, end_index, boxed_type);
+        else
+            return m.mread_obj_v(ptr, index_v, end_index);
     };
 
     m.mread = function(ptr, index, end_index) {
