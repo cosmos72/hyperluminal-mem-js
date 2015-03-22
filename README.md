@@ -30,15 +30,15 @@ Hyperluminal-mem-js is designed and optimized for the following objectives:
 ### News, 21st March 2015
 
 Initial implementation. Supports the following Javascript types:
+* the constants `true`, `false`, `null` and `undefined`
 * integers up to 30 bits
 * arrays
-* the constants `true`, `false`, `null` and `undefined`
+* objects
 
 Support the following types is not yet implemented:
 * integers larger than 30 bits
 * floating point values
 * strings
-* objects
 
 
 Installation and loading
@@ -49,7 +49,10 @@ At the moment, you need to manually include the following files (order is import
 * [js/word.js](src/js/word.js)
 * [js/unboxed.js](src/js/unboxed.js)
 * [js/boxed.js](src/js/boxed.js)
+* [js/box/string_ascii.js](src/js/box/string_ascii.js)
+* [js/box/symbol.js](src/js/box/symbol.js)
 * [js/box/vector.js](src/js/box/vector.js)
+* [js/object.js](src/js/object.js)
 * [js/main.js](src/js/main.js)
 * [js/debug.js](src/js/debug.js)
   
@@ -102,15 +105,15 @@ global `hlmem` object:
    This allows to easily write consecutive serialized values into memory.
    
    `mwrite` currently supports the following Javascript types:
+   * the constants `true`, `false`, `null` and `undefined`
    * integers up to 30 bits, i.e. in the range -0x20000000 .. 0x1fffffff
    * arrays
-   * the constants `true`, `false`, `null` and `undefined`
+   * objects
   
    Support for the following types is not yet implemented:
    * integers larger than 30 bits
    * floating point values
    * strings
-   * objects, using `mwrite_object`
 
 - `mread(ptr, index, end_index)` deserializes a Javascript value, reading it from memory.
 
@@ -126,13 +129,13 @@ global `hlmem` object:
 
    Not yet implemented...
 
-- `mread_object(type, ptr, index, end_index)` is a function that reads
-   a serialized object from memory, deserializes and returns it.
+- `mwrite_object(object, ptr, index, end_index)` is a function
+   that serializes an object, writing it into memory.
 
    Not yet implemented...
 
-- `mwrite_object(object, ptr, index, end_index)` is a function
-   that serializes an object, writing it into memory.
+- `mread_object(type, ptr, index, end_index)` is a function that reads
+   a serialized object from memory, deserializes and returns it.
 
    Not yet implemented...
 

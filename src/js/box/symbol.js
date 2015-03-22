@@ -61,7 +61,7 @@
     m.mread_symbol_v = function(ptr, index_v, end_index) {
         var index = index_v[0];
         m.check_mem_length(ptr, index, end_index, 1);
-        var n_words = (ptr[index++] & 0x7FFFFFF) << 2; // multiply by MEM_BOX_MIN_WORDS
+        var n_words = (ptr[index] & 0x7FFFFFF) << 2; // multiply by MEM_BOX_MIN_WORDS
         var end_box = index + n_words;
         if (end_index > end_box)
             end_index = end_box;
