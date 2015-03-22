@@ -73,7 +73,7 @@
 
     // Round up N-WORDS to a multiple of MEM_BOX_MIN_WORDS
     function round_up_size(n_words) {
-        return (n_words + 3) & -4;
+        return (n_words + 3) & ~3;
     }
           
     // Return the number of words needed to store boxed VALUE in memory,
@@ -90,7 +90,7 @@
         var new_index = m.MWRITE_BOX_FUNCTIONS[boxed_type - m.MEM_BOX_FIRST](ptr, index + m.MEM_BOX_HEADER_WORDS, end_index, value);
         var actual_words = new_index - index;
         if (new_index > end_index) {
-            mwrite_internal_error(ptr, index, end_index, new_index);
+            m.mwrite_internal_error(ptr, index, end_index, new_index);
         }
         var n_words = round_up_size(actual_words);
         ptr[index] = (boxed_type << 27) | (n_words >>> 2); // divide n_words by MEM_BOX_MIN_WORDS

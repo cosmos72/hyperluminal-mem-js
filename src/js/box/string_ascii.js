@@ -21,12 +21,12 @@
 
 (function(m) {
 
-    function msize_box_ascii_string(index, str) {
+    m.msize_box_ascii_string = function(index, str) {
         // 1-word length prefix, and round up required bytes to a whole word
         return index + 1 + ((str.length + 3) >>> 2);
     };
     
-    function mwrite_box_ascii_string(ptr, index, end_index, str) {
+    m.mwrite_box_ascii_string = function(ptr, index, end_index, str) {
         var n_chars = str.length;
         // 1 word to store string length
         var n_words = 1 + ((n_chars + 3) >>> 2);
@@ -50,7 +50,7 @@
         return index;
     };
     
-    function mread_box_ascii_string_v(ptr, index_v, end_index) {
+    m.mread_box_ascii_string_v = function(ptr, index_v, end_index) {
         var index = index_v[0];
         // 1 word to store string length
         m.check_mem_length(ptr, index, end_index, 1);
@@ -79,9 +79,9 @@
         return String.fromCharCode.apply(null, vector);
     };
 
-    m.MSIZE_BOX_FUNCTIONS[m.MEM_BOX_ASCII_STRING - m.MEM_BOX_FIRST] = msize_box_ascii_string;
-    m.MWRITE_BOX_FUNCTIONS[m.MEM_BOX_ASCII_STRING - m.MEM_BOX_FIRST] = mwrite_box_ascii_string;
-    m.MREAD_BOX_FUNCTIONS[m.MEM_BOX_ASCII_STRING - m.MEM_BOX_FIRST] = mread_box_ascii_string_v;
+    m.MSIZE_BOX_FUNCTIONS[m.MEM_BOX_ASCII_STRING - m.MEM_BOX_FIRST] = m.msize_box_ascii_string;
+    m.MWRITE_BOX_FUNCTIONS[m.MEM_BOX_ASCII_STRING - m.MEM_BOX_FIRST] = m.mwrite_box_ascii_string;
+    m.MREAD_BOX_FUNCTIONS[m.MEM_BOX_ASCII_STRING - m.MEM_BOX_FIRST] = m.mread_box_ascii_string_v;
 
 })(hlmem);
 

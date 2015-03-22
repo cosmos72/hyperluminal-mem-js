@@ -23,10 +23,14 @@
     
     var MEM_TAG_SYMBOL = 0;
 
-    var MEM_SYM_FALSE = 0;     // persistent representation of false
+    var MEM_SYM_NULL = 0;     // persistent representation of null
     var MEM_SYM_TRUE  = 1;     // persistent representation of true
     var MEM_SYM_UNDEFINED = 2; // persistent representation of undefined
-    var MEM_SYM_NULL  = 980;   // persistent representation of null
+    var MEM_SYM_FALSE  = 980;   // persistent representation of false
+    var MEM_PKG_USER = 1021; // persistent representation of package COMMON-LISP-USER
+    
+    m.MEM_WORD_NULL = (MEM_TAG_SYMBOL << 27) | MEM_SYM_NULL; // serialized representation of null
+    m.MEM_WORD_PKG_USER = (MEM_TAG_SYMBOL << 27) | MEM_PKG_USER; // serialized representation of package COMMON-LISP-USER
 
     m.is_unboxed = function(value) {
         if (value === null || value === undefined || value === true || value === false)
@@ -51,10 +55,10 @@
             vid = MEM_SYM_NULL;
         else if (value === undefined)
             vid = MEM_SYM_UNDEFINED;
-        else if (value === false)
-            vid = MEM_SYM_FALSE;
         else if (value === true)
             vid = MEM_SYM_TRUE;
+        else if (value === false)
+            vid = MEM_SYM_FALSE;
         else if (typeof(value) === "number" && value|0 === value && value >= -0x20000000 && value <= 0x1fffffff)
         {
             ptr[index] = 0xC0000000 | value;
@@ -78,10 +82,12 @@
         if (tag === MEM_TAG_SYMBOL)
         {
             switch (vid) {
-                case MEM_SYM_FALSE:     return false;
-                case MEM_SYM_TRUE:      return true;
-                case MEM_SYM_UNDEFINED: return undefined;
                 case MEM_SYM_NULL:      return null;
+                case MEM_SYM_UNDEFINED: return undefined;
+                case MEM_SYM_TRUE:      return true;
+                case MEM_SYM_FALSE:     return false;
+                case MEM_PKG_USER:      return null; // Javascript has no packages...
+                default:                return undefined;
             }
         }
         return [tag, vid];

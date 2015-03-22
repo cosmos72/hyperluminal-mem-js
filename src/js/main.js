@@ -56,7 +56,7 @@
         if (end_index > end_box)
             end_index = end_box;
         var boxed_type = value[0];
-        if (boxed_type < m.MEM_BOX_LAST)
+        if (boxed_type <= m.MEM_BOX_LAST)
             return m.mread_box2_v(ptr, index_v, end_index, boxed_type);
         else
             return m.mread_obj_v(ptr, index_v, end_index);

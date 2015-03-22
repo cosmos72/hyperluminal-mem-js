@@ -13,7 +13,9 @@ and open the template in the editor.
         <script src="js/unboxed.js"></script>
         <script src="js/boxed.js"></script>
         <script src="js/box/string_ascii.js"></script>
+        <script src="js/box/symbol.js"></script>
         <script src="js/box/vector.js"></script>
+        <script src="js/object.js"></script>
         <script src="js/main.js"></script>
         <script src="js/debug.js"></script>
         <script>
@@ -28,11 +30,11 @@ and open the template in the editor.
             
             function do_eval() {
                 text_out.value = "";
-                hlmem.inspect(text_out, eval(text_in.value));
+                hlmem.inspect(text_out, eval("(" + text_in.value + ")"));
             };
             
             function do_mwrite() {
-                var obj = eval(text_in.value);
+                var obj = eval("(" + text_in.value + ")");
                 var n_words = hlmem.msize(0, obj);
                 var ptr = hlmem.malloc_words(n_words);
                 hlmem.mwrite(ptr, 0, n_words, obj);
